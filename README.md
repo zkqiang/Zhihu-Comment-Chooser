@@ -14,25 +14,13 @@
 `['https://www.zhihu.com/people/zhihuadmin']` 或
 `['zhihuadmin']`
 
-运行后最终会打印结果：
+#### 运行示例
 ```
-# 首先是请求 API 后的 Response
-...
-
-有效评论用户：
-[ { 
-    # 用户主页
-    'user_url': 'https://www.zhihu.com/people/zhihuadmin',
-    # 评论所在页数
-    'page': 1,
-    # 评论在页数里的次序(如果有精彩评论，也会计入次序，但不会计入抽奖)
-    'order': 1,
-  },
-    ...
-]
-
-中奖用户:
-[
-    ...
-]
+即将对评论用户进行抽奖，同一用户多次评论仅计入首次评论
+抽奖文章: https://zhuanlan.zhihu.com/p/44170330
+抽奖时间: 2018-09-19 13:22:58.381183
+正在抓取评论列表，可能需要数分钟...
+评论共计 300 条，有效评论用户 219 名
+本次抽取 1 名获奖用户，中奖如下:
+用户主页: https://www.zhihu.com/people/zhihubanquan | 昵称：知乎版权 | 评论页数：15 | 序号：10
 ```
