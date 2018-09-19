@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+__author__ = 'zkqiang'
+__zhihu__ = 'https://www.zhihu.com/people/z-kqiang'
+__github__ = 'https://github.com/zkqiang/Zhihu-Comment-Chooser'
+
 import requests
 import json
 import re
 import time
 import random
-import pprint
 
 # 抽奖的文章
 ARTICLE_URL = 'https://zhuanlan.zhihu.com/p/44665180'
@@ -46,13 +49,11 @@ def get_comments(article_url):
     comments = list()
     while True:
         resp = requests.get(api_url, params=params, headers=headers)
-        print(resp.text)
-        resp.encoding = resp.apparent_encoding
+        resp.encoding = 'utf-8'
         resp_data = json.loads(resp.text)
         if resp_data['paging']['is_end'] is True:
             break
         comment_page = resp_data['data']
-        # print(comment_page)
         comments.extend(comment_page)
         params['offset'] += 20
         time.sleep(1)
@@ -85,6 +86,8 @@ def parse_authors(comments):
         author = {
             # 用户主页
             'user_url': user_url,
+            # 用户昵称
+            'name': cm['author']['member']['name'],
             # 评论所在页数
             'page': idx // 20 + 1,
             # 评论在页数里的顺序(精彩评论也计入顺序)
@@ -103,13 +106,22 @@ def choice(chosen, num):
 
 
 def run():
+    print('即将对评论用户进行抽奖，同一用户多次评论仅计入首次评论')
+    print('抽奖文章:', ARTICLE_URL)
+    from datetime import datetime
+    print('抽奖时间:', datetime.now())
+    print('正在抓取评论列表，可能需要数分钟...')
     comments = get_comments(ARTICLE_URL)
     authors = parse_authors(comments)
-    print('有效评论用户：')
-    pprint.pprint(authors, indent=2, width=40)
+    print('评论共计 {} 条，有效评论用户 {} 名'.format(
+        len(comments), len(authors))
+    )
     res = choice(authors, CHOICE_TOTAL)
-    print('中奖用户:')
-    pprint.pprint(res, indent=2, width=40)
+    print('本次抽取 {} 名获奖用户，中奖如下:'.format(CHOICE_TOTAL))
+    for r in res:
+        print('用户主页: {} | 昵称：{} | 评论页数：{} | 页内序号：{}'.format(
+            r['user_url'], r['name'], r['page'], r['order']
+        ))
 
 
 if __name__ == '__main__':
